@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/v1/magic-wand-catalogue")
+@RequestMapping("/api/v1/magic-wand-catalogue")
 public class MagicWandCatalogueController {
 
     @Autowired
