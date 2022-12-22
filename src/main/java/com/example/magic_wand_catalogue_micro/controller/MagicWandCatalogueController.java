@@ -1,41 +1,18 @@
 package com.example.magic_wand_catalogue_micro.controller;
 
 import com.example.magic_wand_catalogue_micro.model.MagicWandCatalogue;
-import com.example.magic_wand_catalogue_micro.service.MagicWandCatalogueService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
-@RequestMapping("/api/v1/magic-wand-catalogue")
-public class MagicWandCatalogueController {
+public interface MagicWandCatalogueController {
 
-    @Autowired
-    private MagicWandCatalogueService magicWandCatalogueService;
+    MagicWandCatalogue addMagicWandCatalogue(MagicWandCatalogue magicWandCatalogue);
 
-    @PostMapping("add")
-    public MagicWandCatalogue addMagicWandCatalogue(@RequestBody MagicWandCatalogue magicWandCatalogue){
-        return magicWandCatalogueService.saveMagicWandCatalogue(magicWandCatalogue);
-    }
+    List<MagicWandCatalogue> findAllMagicWandCatalogue();
 
-    @GetMapping("find-all")
-    public List<MagicWandCatalogue> findAllMagicWandCatalogue() {
-        return magicWandCatalogueService.getAllMagicWandCatalogue();
-    }
+    MagicWandCatalogue findMagicWandCatalogueById(String id);
 
-    @GetMapping("find-id/{id}")
-    public MagicWandCatalogue findMagicWandCatalogueById(@PathVariable String id){
-        return magicWandCatalogueService.getMagicWandCatalogueById(id);
-    }
+    MagicWandCatalogue changeMagicWandCatalogueById(String id, MagicWandCatalogue magicWandCatalogue);
 
-    @PutMapping("update-id/{id}")
-    public MagicWandCatalogue changeMagicWandCatalogueById(@PathVariable String id, @RequestBody MagicWandCatalogue magicWandCatalogue){
-        return magicWandCatalogueService.updateMagicWandCatalogueById(id, magicWandCatalogue);
-    }
-
-    @DeleteMapping("delete-id/{id}")
-    public String removeMagicWandCatalogueById(@PathVariable String id){
-        return magicWandCatalogueService.deleteMagicWandCatalogueById(id);
-    }
+    String removeMagicWandCatalogueById(String id);
 }
