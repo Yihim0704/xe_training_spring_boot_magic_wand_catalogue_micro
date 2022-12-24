@@ -1,9 +1,9 @@
 package com.example.magic_wand_catalogue_micro.service;
 
 import com.example.magic_wand_catalogue_micro.database.MagicWandCatalogueRepository;
-import com.example.magic_wand_catalogue_micro.exception.MagicWandCatalogueExistException;
-import com.example.magic_wand_catalogue_micro.exception.MagicWandCatalogueIdNotFoundException;
-import com.example.magic_wand_catalogue_micro.exception.NoMagicWandCatalogueFoundException;
+import com.example.magic_wand_catalogue_micro.exception.server.MagicWandCatalogueExistException;
+import com.example.magic_wand_catalogue_micro.exception.server.MagicWandCatalogueIdNotFoundException;
+import com.example.magic_wand_catalogue_micro.exception.server.NoMagicWandCatalogueFoundException;
 import com.example.magic_wand_catalogue_micro.model.MagicWandCatalogue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
