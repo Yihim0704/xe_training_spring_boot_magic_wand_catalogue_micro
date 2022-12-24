@@ -1,17 +1,32 @@
 package com.example.magic_wand_catalogue_micro.model;
 
+import org.hibernate.validator.constraints.Range;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.*;
 
 @Entity
 @Table(name = "magic_wand_catalogue")
 public class MagicWandCatalogue {
     @Id
     private String id;
+
+    @NotNull(message = "Magic wand name should not be null.")
+    @NotBlank(message = "Magic wand name should not be blank.")
+    @Pattern(regexp = "^[a-zA-Z ]+$", message = "Magic wand name should not be containing special characters and numbers.")
     private String name;
+
+    @NotNull(message = "Magic wand description should not be null.")
+    @NotBlank(message = "Magic wand description should not be blank.")
+    @Size(max = 100, message = "Magic wand description has exceeded the characters' limit.")
     private String description;
+
+    @Range(min = 18, max = 70, message = "Age limit for magic magic should be between 18 to 70 years of age.")
     private int ageLimit;
+    
+    @Min(0)
     private int stock;
 
     public MagicWandCatalogue() {

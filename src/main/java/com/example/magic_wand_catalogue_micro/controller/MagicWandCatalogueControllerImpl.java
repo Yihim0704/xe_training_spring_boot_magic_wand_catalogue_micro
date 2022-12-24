@@ -5,6 +5,7 @@ import com.example.magic_wand_catalogue_micro.service.MagicWandCatalogueServiceI
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -16,7 +17,7 @@ public class MagicWandCatalogueControllerImpl implements MagicWandCatalogueContr
 
     @Override
     @PostMapping("add")
-    public MagicWandCatalogue addMagicWandCatalogue(@RequestBody MagicWandCatalogue magicWandCatalogue) {
+    public MagicWandCatalogue addMagicWandCatalogue(@RequestBody @Valid MagicWandCatalogue magicWandCatalogue) {
         return magicWandCatalogueServiceImpl.saveMagicWandCatalogue(magicWandCatalogue);
     }
 
@@ -34,7 +35,7 @@ public class MagicWandCatalogueControllerImpl implements MagicWandCatalogueContr
 
     @Override
     @PutMapping("update-id/{id}")
-    public MagicWandCatalogue changeMagicWandCatalogueById(@PathVariable String id, @RequestBody MagicWandCatalogue magicWandCatalogue) {
+    public MagicWandCatalogue changeMagicWandCatalogueById(@PathVariable String id, @RequestBody @Valid MagicWandCatalogue magicWandCatalogue) {
         return magicWandCatalogueServiceImpl.updateMagicWandCatalogueById(id, magicWandCatalogue);
     }
 
