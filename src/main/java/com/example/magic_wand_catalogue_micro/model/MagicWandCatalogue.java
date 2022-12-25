@@ -25,7 +25,7 @@ public class MagicWandCatalogue {
 
     @Range(min = 18, max = 70, message = "Age limit for magic magic should be between 18 to 70 years of age.")
     private int ageLimit;
-    
+
     @Min(0)
     private int stock;
 
@@ -78,5 +78,16 @@ public class MagicWandCatalogue {
 
     public void setStock(int stock) {
         this.stock = stock;
+    }
+
+    @Override
+    public String toString() {
+        return "MagicWandCatalogue{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", ageLimit=" + ageLimit +
+                ", stock=" + stock +
+                '}';
     }
 }

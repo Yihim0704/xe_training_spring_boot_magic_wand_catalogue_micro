@@ -13,13 +13,15 @@ import java.util.UUID;
 
 @Service
 public class MagicWandCatalogueServiceImpl implements MagicWandCatalogueService {
+
     @Autowired
     private MagicWandCatalogueRepository magicWandCatalogueRepository;
 
     @Override
     public MagicWandCatalogue saveMagicWandCatalogue(MagicWandCatalogue magicWandCatalogue) {
-        if (!magicWandCatalogueRepository.findMagicWandCatalogueByName(magicWandCatalogue.getName()).isEmpty()) {
-            throw new MagicWandCatalogueExistException("Magic wand catalogue exists");
+        List<MagicWandCatalogue> existMagicWandCatalogue = magicWandCatalogueRepository.findMagicWandCatalogueByName(magicWandCatalogue.getName());
+        if (!existMagicWandCatalogue.isEmpty()) {
+            throw new MagicWandCatalogueExistException("Magic wand catalogue exists, consider update it with magic wand catalogue Id: " + existMagicWandCatalogue.get(0).getId());
         }
         String id = UUID.randomUUID().toString();
         magicWandCatalogue.setId(id);
@@ -48,8 +50,12 @@ public class MagicWandCatalogueServiceImpl implements MagicWandCatalogueService 
         if (!magicWandCatalogueRepository.findById(id).isPresent()) {
             throw new MagicWandCatalogueIdNotFoundException("Magic wand catalogue does not exist.");
         }
+        List<MagicWandCatalogue> existMagicWandCatalogue = magicWandCatalogueRepository.findMagicWandCatalogueByName(magicWandCatalogue.getName());
+        if (!existMagicWandCatalogue.isEmpty()) {
+            throw new MagicWandCatalogueExistException("Magic wand name exists, consider change to another name");
+        }
         MagicWandCatalogue existingMagicWandCatalogue = magicWandCatalogueRepository.findById(id).orElse(null);
-        existingMagicWandCatalogue.setName(magicWandCatalogue.getName());
+        existingMagicWandCatalogue.setName(magicWandCatalogue.getName().trim());
         existingMagicWandCatalogue.setDescription(magicWandCatalogue.getDescription());
         existingMagicWandCatalogue.setAgeLimit(magicWandCatalogue.getAgeLimit());
         existingMagicWandCatalogue.setStock(magicWandCatalogue.getStock());
