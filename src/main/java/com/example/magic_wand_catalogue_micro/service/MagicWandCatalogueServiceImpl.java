@@ -50,16 +50,16 @@ public class MagicWandCatalogueServiceImpl implements MagicWandCatalogueService 
         if (!magicWandCatalogueRepository.findById(id).isPresent()) {
             throw new MagicWandCatalogueIdNotFoundException("Magic wand catalogue does not exist.");
         }
-        List<MagicWandCatalogue> existMagicWandCatalogue = magicWandCatalogueRepository.findMagicWandCatalogueByName(magicWandCatalogue.getName());
-        if (!existMagicWandCatalogue.isEmpty()) {
+        MagicWandCatalogue existingMagicWandCatalogue = magicWandCatalogueRepository.findById(id).orElse(null);
+        if (existingMagicWandCatalogue.getName().equalsIgnoreCase(magicWandCatalogue.getName())) {
+            existingMagicWandCatalogue.setName(magicWandCatalogue.getName().trim());
+            existingMagicWandCatalogue.setDescription(magicWandCatalogue.getDescription());
+            existingMagicWandCatalogue.setAgeLimit(magicWandCatalogue.getAgeLimit());
+            existingMagicWandCatalogue.setStock(magicWandCatalogue.getStock());
+            return magicWandCatalogueRepository.save(existingMagicWandCatalogue);
+        } else {
             throw new MagicWandCatalogueExistException("Magic wand name exists, consider change to another name");
         }
-        MagicWandCatalogue existingMagicWandCatalogue = magicWandCatalogueRepository.findById(id).orElse(null);
-        existingMagicWandCatalogue.setName(magicWandCatalogue.getName().trim());
-        existingMagicWandCatalogue.setDescription(magicWandCatalogue.getDescription());
-        existingMagicWandCatalogue.setAgeLimit(magicWandCatalogue.getAgeLimit());
-        existingMagicWandCatalogue.setStock(magicWandCatalogue.getStock());
-        return magicWandCatalogueRepository.save(existingMagicWandCatalogue);
     }
 
     @Override
