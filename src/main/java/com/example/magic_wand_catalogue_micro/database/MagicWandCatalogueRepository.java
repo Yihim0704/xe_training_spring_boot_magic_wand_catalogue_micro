@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface MagicWandCatalogueRepository extends JpaRepository<MagicWandCatalogue, String> {
-    MagicWandCatalogue findMagicWandCatalogueByName(String name);
+    MagicWandCatalogue findByName(String name);
 }

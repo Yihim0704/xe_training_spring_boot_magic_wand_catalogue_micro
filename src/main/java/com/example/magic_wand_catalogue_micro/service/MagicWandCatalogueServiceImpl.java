@@ -5,6 +5,8 @@ import com.example.magic_wand_catalogue_micro.exception.server.MagicWandCatalogu
 import com.example.magic_wand_catalogue_micro.exception.server.MagicWandCatalogueIdNotFoundException;
 import com.example.magic_wand_catalogue_micro.exception.server.NoMagicWandCatalogueFoundException;
 import com.example.magic_wand_catalogue_micro.model.MagicWandCatalogue;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,9 +19,11 @@ public class MagicWandCatalogueServiceImpl implements MagicWandCatalogueService 
     @Autowired
     private MagicWandCatalogueRepository magicWandCatalogueRepository;
 
+    private static final Logger logger = LoggerFactory.getLogger(MagicWandCatalogueServiceImpl.class);
+
     @Override
     public MagicWandCatalogue saveMagicWandCatalogue(MagicWandCatalogue magicWandCatalogue) {
-        MagicWandCatalogue existMagicWandCatalogue = magicWandCatalogueRepository.findMagicWandCatalogueByName(magicWandCatalogue.getName());
+        MagicWandCatalogue existMagicWandCatalogue = magicWandCatalogueRepository.findByName(magicWandCatalogue.getName().trim());
         if (existMagicWandCatalogue != null) {
             throw new MagicWandCatalogueExistException("Magic wand catalogue exists, consider update it with magic wand catalogue Id: " + existMagicWandCatalogue.getId());
         }
@@ -50,7 +54,7 @@ public class MagicWandCatalogueServiceImpl implements MagicWandCatalogueService 
         if (!magicWandCatalogueRepository.findById(id).isPresent()) {
             throw new MagicWandCatalogueIdNotFoundException("Magic wand catalogue does not exist.");
         }
-        MagicWandCatalogue existMagicWandCatalogueName = magicWandCatalogueRepository.findMagicWandCatalogueByName(magicWandCatalogue.getName());
+        MagicWandCatalogue existMagicWandCatalogueName = magicWandCatalogueRepository.findByName(magicWandCatalogue.getName());
         MagicWandCatalogue existingMagicWandCatalogue = magicWandCatalogueRepository.findById(id).orElse(null);
         if (existMagicWandCatalogueName == null || existMagicWandCatalogueName != null && existingMagicWandCatalogue.getName().equalsIgnoreCase(magicWandCatalogue.getName())) {
             existingMagicWandCatalogue.setName(magicWandCatalogue.getName().trim());

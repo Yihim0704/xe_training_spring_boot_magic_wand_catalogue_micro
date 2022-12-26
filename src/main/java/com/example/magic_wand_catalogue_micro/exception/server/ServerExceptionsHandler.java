@@ -49,19 +49,19 @@ public class ServerExceptionsHandler {
     }
 
     @ExceptionHandler(MagicWandCatalogueExistException.class)
-    public Map<String, Object> handleWizardInfoExistException(MagicWandCatalogueExistException ex) {
+    public Map<String, Object> handleMagicWandCatalogueExistException(MagicWandCatalogueExistException ex) {
         Map<String, Object> message = new HashMap<>();
-        String magicWandCatalogueExistExistException = generateTraceId();
+        String magicWandCatalogueExistExceptionTraceId = generateTraceId();
         message.put("code", HttpStatus.CONFLICT.toString());
         message.put("message", ex.getLocalizedMessage());
-        ExceptionFormat exceptionFormat = new ExceptionFormat("NOK", 1, LocalDateTime.now(), magicWandCatalogueExistExistException, message);
-        logger.info("MagicWandCatalogueExistExceptionTraceId: {}", magicWandCatalogueExistExistException);
+        ExceptionFormat exceptionFormat = new ExceptionFormat("NOK", 1, LocalDateTime.now(), magicWandCatalogueExistExceptionTraceId, message);
+        logger.info("MagicWandCatalogueExistExceptionTraceId: {}", magicWandCatalogueExistExceptionTraceId);
         logger.info(String.valueOf(exceptionFormat.toFormat()));
         return exceptionFormat.toFormat();
     }
 
     @ExceptionHandler(NoMagicWandCatalogueFoundException.class)
-    public Map<String, Object> handleNoWizardInfoFoundException(NoMagicWandCatalogueFoundException ex) {
+    public Map<String, Object> handleMagicWandCatalogueFoundException(NoMagicWandCatalogueFoundException ex) {
         Map<String, Object> message = new HashMap<>();
         String noMagicWandCatalogueFoundExceptionTraceId = generateTraceId();
         message.put("code", HttpStatus.NO_CONTENT.toString());

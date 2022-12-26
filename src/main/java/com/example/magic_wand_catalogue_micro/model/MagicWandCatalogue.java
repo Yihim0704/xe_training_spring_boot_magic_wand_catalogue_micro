@@ -20,7 +20,7 @@ public class MagicWandCatalogue {
 
     @NotNull(message = "Magic wand description should not be null.")
     @NotBlank(message = "Magic wand description should not be blank.")
-    @Size(max = 100, message = "Magic wand description has exceeded the characters' limit.")
+    @Size(max = 100, message = "Magic wand description has exceeded the characters' limit -- 100.")
     private String description;
 
     @Range(min = 18, max = 70, message = "Age limit for magic magic should be between 18 to 70 years of age.")
