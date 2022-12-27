@@ -44,7 +44,7 @@ public class MagicWandCatalogueServiceImpl implements MagicWandCatalogueService 
     @Override
     public MagicWandCatalogue getMagicWandCatalogueById(String id) {
         if (!magicWandCatalogueRepository.findById(id).isPresent()) {
-            throw new MagicWandCatalogueIdNotFoundException("Magic wand catalogue does not exist.");
+            throw new MagicWandCatalogueIdNotFoundException("Magic wand catalogue Id does not exist.");
         }
         return magicWandCatalogueRepository.findById(id).orElse(null);
     }
