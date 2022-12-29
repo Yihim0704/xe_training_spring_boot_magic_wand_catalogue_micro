@@ -1,6 +1,7 @@
 package com.example.magic_wand_catalogue_micro.service;
 
 import com.example.magic_wand_catalogue_micro.database.MagicWandCatalogueRepository;
+import com.example.magic_wand_catalogue_micro.exception.server.MagicWandCatalogueDescriptionExceededLimitException;
 import com.example.magic_wand_catalogue_micro.exception.server.MagicWandCatalogueExistException;
 import com.example.magic_wand_catalogue_micro.exception.server.MagicWandCatalogueIdNotFoundException;
 import com.example.magic_wand_catalogue_micro.exception.server.NoMagicWandCatalogueFoundException;
@@ -27,9 +28,13 @@ public class MagicWandCatalogueServiceImpl implements MagicWandCatalogueService 
         if (existMagicWandCatalogue != null) {
             throw new MagicWandCatalogueExistException("Magic wand catalogue exists, consider update it with magic wand catalogue Id: " + existMagicWandCatalogue.getId());
         }
+        if (magicWandCatalogue.getDescription().trim().length() > 100) {
+            throw new MagicWandCatalogueDescriptionExceededLimitException("Magic wand catalogue description has exceed the characters' limit -- 100");
+        }
         String id = UUID.randomUUID().toString();
         magicWandCatalogue.setId(id);
         magicWandCatalogue.setName(magicWandCatalogue.getName().trim());
+        magicWandCatalogue.setDescription(magicWandCatalogue.getDescription().trim());
         return magicWandCatalogueRepository.save(magicWandCatalogue);
     }
 
@@ -54,11 +59,14 @@ public class MagicWandCatalogueServiceImpl implements MagicWandCatalogueService 
         if (!magicWandCatalogueRepository.findById(id).isPresent()) {
             throw new MagicWandCatalogueIdNotFoundException("Magic wand catalogue does not exist.");
         }
-        MagicWandCatalogue existMagicWandCatalogueName = magicWandCatalogueRepository.findByName(magicWandCatalogue.getName());
+        MagicWandCatalogue existMagicWandCatalogueName = magicWandCatalogueRepository.findByName(magicWandCatalogue.getName().trim());
         MagicWandCatalogue existingMagicWandCatalogue = magicWandCatalogueRepository.findById(id).orElse(null);
-        if (existMagicWandCatalogueName == null || existMagicWandCatalogueName != null && existingMagicWandCatalogue.getName().equalsIgnoreCase(magicWandCatalogue.getName())) {
+        if (existMagicWandCatalogueName == null || existMagicWandCatalogueName != null && existingMagicWandCatalogue.getName().equalsIgnoreCase(magicWandCatalogue.getName().trim())) {
+            if (magicWandCatalogue.getDescription().trim().length() > 100) {
+                throw new MagicWandCatalogueDescriptionExceededLimitException("Magic wand catalogue description has exceed the characters' limit -- 100");
+            }
             existingMagicWandCatalogue.setName(magicWandCatalogue.getName().trim());
-            existingMagicWandCatalogue.setDescription(magicWandCatalogue.getDescription());
+            existingMagicWandCatalogue.setDescription(magicWandCatalogue.getDescription().trim());
             existingMagicWandCatalogue.setAgeLimit(magicWandCatalogue.getAgeLimit());
             existingMagicWandCatalogue.setStock(magicWandCatalogue.getStock());
             return magicWandCatalogueRepository.save(existingMagicWandCatalogue);

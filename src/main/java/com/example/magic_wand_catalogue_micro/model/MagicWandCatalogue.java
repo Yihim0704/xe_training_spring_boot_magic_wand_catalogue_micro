@@ -5,7 +5,10 @@ import org.hibernate.validator.constraints.Range;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.validation.constraints.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 @Entity
 @Table(name = "magic_wand_catalogue")
@@ -20,7 +23,7 @@ public class MagicWandCatalogue {
 
     @NotNull(message = "Magic wand description should not be null.")
     @NotBlank(message = "Magic wand description should not be blank.")
-    @Size(max = 100, message = "Magic wand description has exceeded the characters' limit -- 100.")
+    @Pattern(regexp = "^[a-zA-Z0-9,. ]+$", message = "Magic wand name should not be containing special characters except comma and full stop.")
     private String description;
 
     @Range(min = 18, max = 70, message = "Age limit for magic magic should be between 18 to 70 years of age.")

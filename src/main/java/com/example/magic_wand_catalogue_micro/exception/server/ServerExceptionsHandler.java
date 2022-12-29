@@ -48,6 +48,18 @@ public class ServerExceptionsHandler {
         return exceptionFormat.toFormat();
     }
 
+    @ExceptionHandler(MagicWandCatalogueDescriptionExceededLimitException.class)
+    public Map<String, Object> handleMagicWandCatalogueDescriptionExceededLimitException(MagicWandCatalogueDescriptionExceededLimitException ex) {
+        Map<String, Object> message = new HashMap<>();
+        String magicWandCatalogueDescriptionExceededLimitExceptionTraceId = generateTraceId();
+        message.put("code", HttpStatus.BAD_REQUEST.toString());
+        message.put("message", ex.getLocalizedMessage());
+        ExceptionFormat exceptionFormat = new ExceptionFormat("NOK", 1, LocalDateTime.now(), magicWandCatalogueDescriptionExceededLimitExceptionTraceId, message);
+        logger.info("MagicWandCatalogueDescriptionExceededLimitExceptionTraceId: {}", magicWandCatalogueDescriptionExceededLimitExceptionTraceId);
+        logger.info(String.valueOf(exceptionFormat.toFormat()));
+        return exceptionFormat.toFormat();
+    }
+
     @ExceptionHandler(MagicWandCatalogueExistException.class)
     public Map<String, Object> handleMagicWandCatalogueExistException(MagicWandCatalogueExistException ex) {
         Map<String, Object> message = new HashMap<>();
