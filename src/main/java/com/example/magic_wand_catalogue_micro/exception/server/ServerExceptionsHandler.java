@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -23,7 +23,7 @@ public class ServerExceptionsHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(ServerExceptionsHandler.class);
 
-    public String generateTraceId() {
+    public String getTraceId() {
         String traceId = null;
         Span span = tracer.currentSpan();
         if (span != null) {
@@ -32,30 +32,38 @@ public class ServerExceptionsHandler {
         return traceId;
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public Map<String, Object> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public Map<String, Object> handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException ex) {
         Map<String, Object> message = new HashMap<>();
-        Map<String, String> errorMap = new HashMap<>();
-        String methodArgumentNotValidExceptionTraceId = generateTraceId();
-        ex.getBindingResult().getFieldErrors().forEach(error -> {
-            errorMap.put(error.getField(), error.getDefaultMessage());
-        });
-        message.put("code", HttpStatus.BAD_REQUEST.toString());
-        message.put("message", errorMap);
-        ExceptionFormat exceptionFormat = new ExceptionFormat("NOK", 1, LocalDateTime.now(), methodArgumentNotValidExceptionTraceId, message);
-        logger.info("MethodArgumentNotValidExceptionTraceId: {}", methodArgumentNotValidExceptionTraceId);
+        String httpRequestMethodNotSupportedExceptionTraceId = getTraceId();
+        message.put("code", HttpStatus.METHOD_NOT_ALLOWED.value());
+        message.put("message", ex.getLocalizedMessage());
+        ExceptionFormat exceptionFormat = new ExceptionFormat("NOK", 1, LocalDateTime.now(), httpRequestMethodNotSupportedExceptionTraceId, message);
+        logger.info("HttpRequestMethodNotSupportedExceptionTraceId: {}", httpRequestMethodNotSupportedExceptionTraceId);
         logger.info(String.valueOf(exceptionFormat.toFormat()));
         return exceptionFormat.toFormat();
     }
 
-    @ExceptionHandler(MagicWandCatalogueDescriptionExceededLimitException.class)
-    public Map<String, Object> handleMagicWandCatalogueDescriptionExceededLimitException(MagicWandCatalogueDescriptionExceededLimitException ex) {
+    @ExceptionHandler(ServerErrorException.class)
+    public Map<String, Object> handleServerErrorException(ServerErrorException ex) {
         Map<String, Object> message = new HashMap<>();
-        String magicWandCatalogueDescriptionExceededLimitExceptionTraceId = generateTraceId();
-        message.put("code", HttpStatus.BAD_REQUEST.toString());
+        String serverErrorExceptionTraceId = getTraceId();
+        message.put("code", HttpStatus.INTERNAL_SERVER_ERROR.value());
         message.put("message", ex.getLocalizedMessage());
-        ExceptionFormat exceptionFormat = new ExceptionFormat("NOK", 1, LocalDateTime.now(), magicWandCatalogueDescriptionExceededLimitExceptionTraceId, message);
-        logger.info("MagicWandCatalogueDescriptionExceededLimitExceptionTraceId: {}", magicWandCatalogueDescriptionExceededLimitExceptionTraceId);
+        ExceptionFormat exceptionFormat = new ExceptionFormat("NOK", 1, LocalDateTime.now(), serverErrorExceptionTraceId, message);
+        logger.info("ServerErrorExceptionTraceId: {}", serverErrorExceptionTraceId);
+        logger.info(String.valueOf(exceptionFormat.toFormat()));
+        return exceptionFormat.toFormat();
+    }
+
+    @ExceptionHandler(InvalidMagicWandCatalogueDetailsException.class)
+    public Map<String, Object> handleInvalidMagicWandCatalogueDetailsException(InvalidMagicWandCatalogueDetailsException ex) {
+        Map<String, Object> message = new HashMap<>();
+        String invalidMagicWandCatalogueDetailsExceptionTraceId = getTraceId();
+        message.put("code", HttpStatus.BAD_REQUEST.value());
+        message.put("message", ex.getLocalizedMessage());
+        ExceptionFormat exceptionFormat = new ExceptionFormat("NOK", 1, LocalDateTime.now(), invalidMagicWandCatalogueDetailsExceptionTraceId, message);
+        logger.info("InvalidMagicWandCatalogueDetailsExceptionTraceId: {}", invalidMagicWandCatalogueDetailsExceptionTraceId);
         logger.info(String.valueOf(exceptionFormat.toFormat()));
         return exceptionFormat.toFormat();
     }
@@ -63,8 +71,8 @@ public class ServerExceptionsHandler {
     @ExceptionHandler(MagicWandCatalogueExistException.class)
     public Map<String, Object> handleMagicWandCatalogueExistException(MagicWandCatalogueExistException ex) {
         Map<String, Object> message = new HashMap<>();
-        String magicWandCatalogueExistExceptionTraceId = generateTraceId();
-        message.put("code", HttpStatus.CONFLICT.toString());
+        String magicWandCatalogueExistExceptionTraceId = getTraceId();
+        message.put("code", HttpStatus.CONFLICT.value());
         message.put("message", ex.getLocalizedMessage());
         ExceptionFormat exceptionFormat = new ExceptionFormat("NOK", 1, LocalDateTime.now(), magicWandCatalogueExistExceptionTraceId, message);
         logger.info("MagicWandCatalogueExistExceptionTraceId: {}", magicWandCatalogueExistExceptionTraceId);
@@ -75,8 +83,8 @@ public class ServerExceptionsHandler {
     @ExceptionHandler(NoMagicWandCatalogueFoundException.class)
     public Map<String, Object> handleMagicWandCatalogueFoundException(NoMagicWandCatalogueFoundException ex) {
         Map<String, Object> message = new HashMap<>();
-        String noMagicWandCatalogueFoundExceptionTraceId = generateTraceId();
-        message.put("code", HttpStatus.NO_CONTENT.toString());
+        String noMagicWandCatalogueFoundExceptionTraceId = getTraceId();
+        message.put("code", HttpStatus.NO_CONTENT.value());
         message.put("message", ex.getLocalizedMessage());
         ExceptionFormat exceptionFormat = new ExceptionFormat("NOK", 1, LocalDateTime.now(), noMagicWandCatalogueFoundExceptionTraceId, message);
         logger.info("NoMagicWandCatalogueFoundExceptionTraceId: {}", noMagicWandCatalogueFoundExceptionTraceId);
@@ -87,8 +95,8 @@ public class ServerExceptionsHandler {
     @ExceptionHandler(MagicWandCatalogueIdNotFoundException.class)
     public Map<String, Object> handleWizardIdNotFoundException(MagicWandCatalogueIdNotFoundException ex) {
         Map<String, Object> message = new HashMap<>();
-        String magicWandCatalogueIdNotFoundExceptionTraceId = generateTraceId();
-        message.put("code", HttpStatus.NOT_FOUND.toString());
+        String magicWandCatalogueIdNotFoundExceptionTraceId = getTraceId();
+        message.put("code", HttpStatus.NOT_FOUND.value());
         message.put("message", ex.getLocalizedMessage());
         ExceptionFormat exceptionFormat = new ExceptionFormat("NOK", 1, LocalDateTime.now(), magicWandCatalogueIdNotFoundExceptionTraceId, message);
         logger.info("MagicWandCatalogueIdNotFoundExceptionTraceId: {}", magicWandCatalogueIdNotFoundExceptionTraceId);
