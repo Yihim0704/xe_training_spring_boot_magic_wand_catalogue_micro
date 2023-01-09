@@ -15,5 +15,7 @@ public interface MagicWandCatalogueService {
 
     MagicWandCatalogue updateMagicWandCatalogueById(String id, MagicWandCatalogue magicWandCatalogue) throws HttpRequestMethodNotSupportedException;
 
+    MagicWandCatalogue updateMagicWandCatalogueStockById(String id, MagicWandCatalogue magicWandCatalogue) throws HttpRequestMethodNotSupportedException;
+
     String deleteMagicWandCatalogueById(String id) throws HttpRequestMethodNotSupportedException;
 }

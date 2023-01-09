@@ -71,6 +71,19 @@ public class MagicWandCatalogueController {
         return ResponseEntity.ok().body(magicWandCatalogueResponse);
     }
 
+    @PutMapping("update-stock-id/{id}")
+    public ResponseEntity<MagicWandCatalogueDto> changeMagicWandCatalogueStockById(@PathVariable String id, @RequestBody MagicWandCatalogueDto magicWandCatalogueDto) throws HttpRequestMethodNotSupportedException {
+        logger.info("Server MagicWandCatalogueController.changeMagicWandCatalogueStockById");
+
+        MagicWandCatalogue magicWandCatalogueRequest = modelMapper.map(magicWandCatalogueDto, MagicWandCatalogue.class);
+
+        MagicWandCatalogue magicWandCatalogue = magicWandCatalogueService.updateMagicWandCatalogueStockById(id, magicWandCatalogueRequest);
+
+        MagicWandCatalogueDto magicWandCatalogueResponse = modelMapper.map(magicWandCatalogue, MagicWandCatalogueDto.class);
+
+        return ResponseEntity.ok().body(magicWandCatalogueResponse);
+    }
+
     @DeleteMapping("delete-id/{id}")
     public String removeMagicWandCatalogueById(@PathVariable String id) throws HttpRequestMethodNotSupportedException {
         logger.info("Server MagicWandCatalogueController.removeMagicWandCatalogueById");

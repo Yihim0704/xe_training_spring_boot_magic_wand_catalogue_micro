@@ -8,7 +8,6 @@ import java.util.UUID;
 public class MagicWandCatalogueDto {
     private UUID id;
     private String name;
-    private String description;
     private int ageLimit;
     private int stock;
 }

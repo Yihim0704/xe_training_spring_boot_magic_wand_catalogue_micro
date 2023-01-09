@@ -91,6 +91,23 @@ public class MagicWandCatalogueServiceImpl implements MagicWandCatalogueService 
     }
 
     @Override
+    public MagicWandCatalogue updateMagicWandCatalogueStockById(String id, MagicWandCatalogue magicWandCatalogue) throws HttpRequestMethodNotSupportedException {
+        logger.info("Server MagicWandCatalogueService.updateMagicWandCatalogueStockById");
+        try {
+            MagicWandCatalogue existingMagicWandCatalogue = magicWandCatalogueRepository.findById(UUID.fromString(id)).orElseThrow(() -> new MagicWandCatalogueIdNotFoundException("Magic wand catalogue Id does not exist. -- " + id));
+            if (magicWandCatalogue.getStock() < 0) {
+                throw new InvalidMagicWandCatalogueDetailsException("Magic wand catalogue stock must not be having negative numbers.");
+            }
+            existingMagicWandCatalogue.setStock(magicWandCatalogue.getStock());
+            return magicWandCatalogueRepository.save(existingMagicWandCatalogue);
+        } catch (NullPointerException e) {
+            throw new InvalidMagicWandCatalogueDetailsException("Fields must not be null.");
+        } catch (HttpServerErrorException e) {
+            throw new ServerErrorException(e.getLocalizedMessage());
+        }
+    }
+
+    @Override
     public String deleteMagicWandCatalogueById(String id) throws HttpRequestMethodNotSupportedException {
         logger.info("Server MagicWandCatalogueService.deleteMagicWandCatalogueById");
         try {
